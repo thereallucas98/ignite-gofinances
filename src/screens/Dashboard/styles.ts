@@ -9,8 +9,6 @@ import { DataListProps } from ".";
 export const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.background};
-
-  margin-bottom: 10px;
 `;
 
 export const Header = styled.View`
@@ -101,6 +99,6 @@ export const TransactionList = styled(
 ).attrs({
   showsVerticalScrollIndicator: false,
   contentContainerStyle: {
-    paddingBottom: 10,
+    paddingBottom: getBottomSpace() + 10,
   }
 })``;

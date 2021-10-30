@@ -11,6 +11,8 @@ export const Container = styled.View`
   border-radius: 5px;
 
   padding: 17px 24px;
+
+  margin-bottom: ${RFValue(10)}px;
 `;
 
 export const Title = styled.Text`
@@ -25,7 +27,7 @@ export const Amount = styled.Text<TransactionProps>`
     ? theme.colors.success
     : theme.colors.attention
   };
-  
+
   margin-top: 2px;
 `;
 
