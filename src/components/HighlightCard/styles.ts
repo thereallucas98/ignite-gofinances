@@ -18,6 +18,10 @@ export const Container = styled.View<TypeProps>`
   padding-bottom: ${RFValue(42)}px;
   
   margin-right: 16px;
+
+  & + View {
+    margin-bottom: 16px;
+  }
 `;
 
 export const Header = styled.View`
