@@ -18,7 +18,13 @@ interface Props extends TouchableOpacityProps {
   isActive: boolean;
 }
 
-export function TransactionTypeButton({ title, type, isActive, ...rest }: Props) {
+export function TransactionTypeButton({
+  title,
+  type,
+  isActive,
+  ...rest
+}: Props) {
+
   return (
     <Container
       type={type}

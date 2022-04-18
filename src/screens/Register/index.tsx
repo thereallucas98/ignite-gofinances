@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 
 import { Button } from "../../components/Form/Button";
+import { CategorySelect } from "../../components/Form/CategorySelect";
 import { Input } from "../../components/Form/Input";
 import { TransactionTypeButton } from "../../components/TransactionTypeButton";
 
-import { 
-  Container, 
-  Header, 
-  Title, 
+import {
+  Container,
+  Header,
+  Title,
   Form,
   Fields,
   TransactionTypes,
@@ -29,7 +30,7 @@ export function Register() {
       <Form>
         <Fields>
           <Input placeholder="Nome" />
-          <Input placeholder="Preço" />
+          <Input placeholder="Preço" keyboardType="decimal-pad" />
 
           <TransactionTypes>
             <TransactionTypeButton
@@ -45,6 +46,8 @@ export function Register() {
               onPress={() => handleTransactionTypeSelect('down')}
             />
           </TransactionTypes>
+
+          <CategorySelect title="Categoria" />
         </Fields>
 
         <Button title="Enviar" />
