@@ -7,6 +7,8 @@ import {
   getBottomSpace,
 } from "react-native-iphone-x-helper";
 
+import { BorderlessButton } from "react-native-gesture-handler";
+
 import { DataListProps } from ".";
 
 export const Container = styled.View`
@@ -65,6 +67,8 @@ export const UserName = styled.Text`
   font-size: ${RFValue(18)}px;
   font-family: ${({ theme }) => theme.fonts.bold};
 `;
+
+export const LogoutButton = styled(BorderlessButton)``;
 
 export const Icon = styled(Feather)`
   color: ${({ theme }) => theme.colors.secondary};

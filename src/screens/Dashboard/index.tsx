@@ -1,7 +1,7 @@
 import React from "react";
+
 import { HighlightCard } from "../../components/HighlightCard";
 import { TransactionCard } from "../../components/TransactionCard";
-
 import { TransactionCardProps } from "../../components/TransactionCard"
 
 import {
@@ -13,6 +13,7 @@ import {
   User,
   UserGreeeting,
   UserName,
+  LogoutButton,
   Icon,
   HighlightCards,
   Transactions,
@@ -73,7 +74,9 @@ export function Dashboard() {
               <UserName>David Lucas</UserName>
             </User>
           </UserInfo>
-          <Icon name="power" />
+          <LogoutButton onPress={() => { }}>
+            <Icon name="power" />
+          </LogoutButton>
         </UserWrapper>
       </Header>
 
