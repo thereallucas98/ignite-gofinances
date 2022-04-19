@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Alert,
   Keyboard,
@@ -7,6 +7,12 @@ import {
 } from "react-native";
 
 import * as Yup from "yup";
+
+import uuid from "react-native-uuid";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { useNavigation } from "@react-navigation/native";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -44,6 +50,8 @@ const schema = Yup.object().shape({
 });
 
 export function Register() {
+  const collectionKey = "@gofinances:transactions";
+
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [category, setCategory] = useState({
@@ -51,9 +59,12 @@ export function Register() {
     name: "Categoria",
   });
 
+  const navigation = useNavigation();
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(schema)
@@ -71,7 +82,7 @@ export function Register() {
     setCategoryModalOpen(false);
   }
 
-  function handleRegister(form: Partial<FormData>) {
+  async function handleRegister(form: Partial<FormData>) {
     if (!transactionType) {
       return Alert.alert("Selecione o tipo da transação.");
     }
@@ -80,13 +91,56 @@ export function Register() {
       return Alert.alert("Selecione a categoria.");
     }
 
-    const data = {
+    const newTransaction = {
+      id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
       transactionType,
       category: category.key,
+      date: new Date(),
+    }
+
+    try {
+      const data = await AsyncStorage.getItem(collectionKey);
+
+      const currentData = data ? JSON.parse(data) : [];
+
+      const dataFormatted = [
+        ...currentData,
+        newTransaction
+      ]
+
+      await AsyncStorage.setItem(collectionKey, JSON.stringify(dataFormatted));
+
+      setTransactionType('');
+      setCategory({
+        key: "category",
+        name: "Categoria"
+      });
+
+      reset();
+
+      navigation.navigate("Listagem" as never);
+
+    } catch (error) {
+      console.log(error);
+
+      Alert.alert("Opa! Não foi possível salvar.");
     }
   }
+
+  useEffect(() => {
+    async function loadData() {
+
+      const results = await AsyncStorage.getItem(collectionKey);
+
+      console.log(JSON.parse(results!));
+
+      // await AsyncStorage.removeItem(collectionKey);
+    }
+
+    loadData();
+  }, [])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
