@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -6,6 +6,7 @@ import { HistoryCard } from "../../components/HistoryCard";
 import { Container, Header, Title, Content } from './styles';
 
 import { categories } from "../../utils/categories";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface TransactionsData {
   type: 'positive' | 'negative';
@@ -62,7 +63,11 @@ export function Resume() {
 
   useEffect(() => {
     loadData();
-  }, [])
+  }, []);
+
+  useFocusEffect(useCallback(() => {
+    loadData();
+  }, []));
 
   return (
     <Container>
