@@ -51,11 +51,12 @@ export function Resume() {
 
   const theme = useTheme();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
   async function loadData() {
+    setIsLoading(true);
     const response = await AsyncStorage.getItem(collectionKey);
     const responseFormatted = response ? JSON.parse(response) : [];
 
@@ -105,7 +106,7 @@ export function Resume() {
   }
 
   function handleDateChange(action: "next" | "prev") {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     if (action === "next") {
       setSelectedDate(addMonths(selectedDate, 1));
@@ -114,9 +115,9 @@ export function Resume() {
     }
   }
 
-  useEffect(() => {
-    loadData();
-  }, [selectedDate]);
+  // useEffect(() => {
+  //   loadData();
+  // }, [selectedDate]);
 
   useFocusEffect(useCallback(() => {
     loadData();
