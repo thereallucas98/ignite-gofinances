@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { useTheme } from "styled-components";
+import { useFocusEffect } from "@react-navigation/native";
+import { RFValue } from "react-native-responsive-fontsize";
+import { VictoryPie } from "victory-native";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { HistoryCard } from "../../components/HistoryCard";
-import { Container, Header, Title, Content } from './styles';
+import { Container, Header, Title, Content, ChartContainer } from './styles';
 
 import { categories } from "../../utils/categories";
-import { useFocusEffect } from "@react-navigation/native";
 
 interface TransactionsData {
   type: 'positive' | 'negative';
@@ -17,13 +21,18 @@ interface TransactionsData {
 }
 
 interface CategoryData {
+  key: string;
   name: string;
   color: string;
-  total: string;
+  total: number;
+  totalFormatted: string;
+  percent: string;
 }
 
 export function Resume() {
   const collectionKey = "@gofinances:transactions";
+
+  const theme = useTheme();
 
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
@@ -33,6 +42,11 @@ export function Resume() {
 
     const expensives = responseFormatted
       .filter((expensive: TransactionsData) => expensive.type == "negative");
+
+    const expensiveTotal = expensives
+      .reduce((acumulator: number, expensive: TransactionsData) => {
+        return acumulator += +expensive.amount;
+      }, 0);
 
     const totalByCategory: CategoryData[] = [];
 
@@ -46,13 +60,18 @@ export function Resume() {
       });
 
       if (categorySum > 0) {
+        const percent = `${(categorySum / expensiveTotal * 100).toFixed(0)}%`;
+
         totalByCategory.push({
+          key: category.key,
           name: category.name,
           color: category.color,
-          total: categorySum.toLocaleString('pt-BR', {
+          total: categorySum,
+          totalFormatted: categorySum.toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL',
           }),
+          percent: percent,
         });
       }
 
@@ -76,12 +95,29 @@ export function Resume() {
       </Header>
 
       <Content>
+        <ChartContainer>
+          <VictoryPie
+            data={totalByCategories}
+            colorScale={totalByCategories.map(item => item.color)}
+            style={{
+              labels: {
+                fontSize: RFValue(18),
+                fontWeight: 'bold',
+                fill: theme.colors.shape,
+              }
+            }}
+            labelRadius={58}
+            x="percent"
+            y="total"
+          />
+        </ChartContainer>
+
         {
           totalByCategories && totalByCategories.map(item => (
             <HistoryCard
-              key={item.name}
+              key={item.key}
               title={item.name}
-              amount={item.total}
+              amount={item.totalFormatted}
               color={item.color}
             />
           ))
